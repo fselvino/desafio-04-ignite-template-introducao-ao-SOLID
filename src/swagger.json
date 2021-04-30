@@ -1,0 +1,266 @@
+{
+    "openapi": "3.0.0",
+    "info":{
+      "title": "Introduçao ao SOLID",
+      "description":"This is API Introdução ao SOLID",
+      "version":"1.0.0",
+      "contact": {
+        "email":"fernandoselvino@gmail.com"
+      }
+    },
+    "paths":{
+      "/users": { 
+        "post": {
+          "tags":["User"],
+          "summary": "Create a user",
+          "description": "Create a new user",
+          "requestBody": {
+            "content" : {
+              "application/json": {
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                   
+                    "name": {
+                      "type":"string"
+                    },
+                    "email": {
+                      "type":"string"
+                    }                   
+                  },
+                  "example":{
+                    "name": "fulano de tal",
+                    "email" : "fulanodetal@gmail.com"
+                  }
+                }
+              
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description" : "Created user",
+              "content": { 
+                  "application/json":{
+                      "schema":{
+                          "type":"object", 
+                          "properties":{
+                              "id":{
+                                  "type":"string"
+                              },
+                              "admin":{
+                                  "type":"boolean"
+                              },
+                              "name":{
+                                  "type":"string"
+                              },
+                              "email":{
+                                  "type":"string"
+                              },
+                              "created_at":{
+                                  "type":"Date"
+                              },
+                              "updated_at": {
+                                  "type":"Date"
+                              }
+                          }            
+                          
+                      },
+                      "example":{
+                        "id": "1d3ebba3-9e6f-45b4-9d34-3cdea7ca039b",
+                        "admin": false,
+                        "name": "fulano de tal",
+                        "email": "fulanodetal@gmail.com",
+                        "created_at": "2021-04-19T23:58:05.000Z",
+                        "updated_at": "2021-04-19T23:58:05.000Z"
+                      }
+                  }
+              }
+            },
+            "400":{
+              "description": "User already exists",
+              "content":{
+                  "application/json":{
+                      "schema":{
+                          "type":"object",
+                          "properties":{
+                            "error":{
+                                "type":"string"
+                            }
+                          }
+                      },
+                      "example":{
+                          "error":"User already exists"
+                      }
+                  }
+              }
+            }
+          }
+        },        
+        "get": {
+          "tags":["User"],
+          "summary":"List all users",
+          "description": "Only `admin` users can access",
+          "responses":{
+            "200":{
+              "description":"Success",
+              "content":{
+                "application/json":{
+                  "schema": {
+                    "type":"array",
+                    "items": {
+                      "type":"object",
+                      "properties":{
+                        "name":{
+                          "type":"string"
+                        },
+                        "email":{
+                          "type":"string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+  
+        }
+      },
+      "/user/{user_id}":{
+        "get":{
+          "tags":["User"],
+          "summary":"Return user especifique",
+          "description": "Return user espedifique",          
+          "parameters":[{
+              "name":"user_id",
+              "required":true,
+              "schema": {
+                "type":"string",
+                "format":"uuid"
+              },
+              "description":"The user ID",
+              "type":"string",
+              "in":"path"
+              
+            }],
+         
+          "responses": {
+            "200": {
+              "description":"Success",
+              "content":{
+                "application/json":{
+                  "schema":{
+                      "$ref":"#/definitions/user"
+                  }
+                }
+              }
+
+            },
+            "404":{
+              "description": "User already exists",
+              "content":{
+                  "application/json":{
+                      "schema":{
+                          "type":"object",
+                          "properties":{
+                            "error":{
+                                "type":"string"
+                            }
+                          }
+                      },
+                      "example":{
+                          "error":"User already exists"
+                      }
+                  }
+              }
+            }
+          }
+        }
+      },
+      "/user/{user_id}/admin":{
+        "patch":{
+          "tags":["User"],
+          "summary":"Turn user admin",
+          "description": "Turn user admin", 
+          "produces": [
+            "application/xml",
+            "application/json"
+          ],         
+          "parameters":[{
+              "name":"user_id",
+              "required":true,                 
+            "schema": {
+              "type":"string",
+              "format":"uuid"
+            },
+              "in":"path"
+                      
+            }],
+         
+          "responses": {
+            "200": {
+              "description":"Success",
+              "content":{
+                "application/json":{
+                  "schema":{
+                      "$ref":"#/definitions/user"
+                  }
+                }
+              }
+
+            },
+            "404": {
+              "description":"Success",
+              "content":{
+                "application/json":{
+                  "schema":{
+                      "$ref":"#/definitions/error"
+                  }
+                }
+              }
+
+            }
+          }
+        }
+      }
+    },
+    "definitions":{
+      "user":{
+        "type":"object",
+        "properties":{
+          "admin":{
+            "type":"boolean",
+            "default":false
+          },
+           "id":{
+            "Type":"string"            
+          },
+          "name":{
+            "Type":"string"
+          },
+          "email":{
+            "Type":"string"
+          },
+          "created_at":{
+            "type":"string",
+            "format":"date-time"           
+          },
+          "updated_at":{
+            "type":"string",
+            "format":"date-time" 
+          }
+        }
+      },
+      "error":{
+        "type":"object",
+        "properties":{
+          "error":{
+            "type":"string",
+            "default":"User not found"
+          }          
+          
+        }
+      }
+    }  
+  }
